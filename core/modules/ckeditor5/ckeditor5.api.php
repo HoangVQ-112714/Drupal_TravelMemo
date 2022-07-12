@@ -72,7 +72,7 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
  *
  * Declared as an Annotation:
  * @code
- * # In a scr/Plugin/CKEditor5Plugin/Marquee.php file.
+ * # In a src/Plugin/CKEditor5Plugin/Marquee.php file.
  * /**
  *  * @CKEditor5Plugin(
  *  *   id = "MODULE_NAME_marquee",
