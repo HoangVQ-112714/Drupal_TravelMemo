@@ -1,0 +1,47 @@
+name: travelmomo
+recipe: drupal9
+config:
+  webroot: .
+  php: '7.4'
+  composer_version: '1.10.1'
+services:
+  appserver:
+    xdebug: true
+    config:
+      php: .lando/php.ini
+    overrides:
+      environment:
+        PHP_SENDMAIL_PATH: '/usr/sbin/sendmail -S mailhog:1025'
+        PHP_IDE_CONFIG: "serverName=travelmomo"
+        DRUSH_OPTIONS_URI: "http://travelmomo.lndo.site"
+        DRUSH_OPTIONS_ROOT: '/app/web'
+    build:
+      - "/app/vendor/bin/phpcs --config-set installed_paths /app/vendor/drupal/coder/coder_sniffer"
+  drupal9:
+    type: mariadb
+    creds:
+      user: drupal9
+      password: drupal9
+      database: drupal
+    portforward: true
+  mailhog:
+    type: mailhog
+    hogfrom:
+      - appserver
+    portforward: true
+proxy:
+  mailhog:
+    - mail.travelmomo.lndo.site
+
+tooling:
+  phpcs:
+    service: appserver
+    description: 'Run phpcs: lando phpcs'
+    cmd:
+      - 'phpcs --standard=Drupal,DrupalPractice --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md'
+
+  phpcbf:
+    service: appserver
+    description: 'Run phpcbf: lando phpcbf'
+    cmd:
+      - 'phpcbf --standard=Drupal,DrupalPractice --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md'
